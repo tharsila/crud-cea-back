@@ -34,4 +34,41 @@ class ProductController extends Controller
         $productData =  $request->all();
         return Product::create($productData);
     }
+
+    /**
+     * Visualiza um produto especifico
+     *
+     * @param [type] $id
+     * @return Product
+     */
+    public function show($id) 
+    {
+        return Product::findOrFail($id);
+    }
+
+    /**
+     * Atualiza um produto especifico
+     *
+     * @param Request $request
+     * @param [type] $id
+     * @return void
+     */
+    public function update(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
+        $product->update($request->all());
+
+        return $product;
+    }
+
+    /**
+     * Remove um produto especifico
+     *
+     * @param [type] $id
+     * @return void
+     */
+    public function destroy($id)
+    {
+        return Product::destroy($id);
+    }
 }

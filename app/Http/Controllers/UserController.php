@@ -46,5 +46,41 @@ class UserController extends Controller
         /* $token = $user->createToken('JWT');
         return response()->json($token->plainTextToken(), 201); */
     }
+
+    /**
+     * Visualiza um usuário especifico
+     *
+     * @param [type] $id
+     * @return User
+     */
+    public function show($id)
+    {
+        return User::findOrFail($id);
+    }
+
+    /**
+     * Atualiza um usuário especifico
+     *
+     * @param Request $request
+     * @param [type] $id
+     * @return void
+     */
+    public function update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        $user->update($request->all());
+
+        return $user;
+    }
+    /**
+     * Remove um usuário especifico
+     *
+     * @param [type] $id
+     * @return void
+     */
+    public function destroy($id)
+    {
+        return User::destroy($id);
+    }
     
 }
