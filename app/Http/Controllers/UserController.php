@@ -81,13 +81,6 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
-       /*  $request->validate([
-            'name' => ['required', 'string', 'between:3,100'],
-            'email' => ['required', 'email', 'unique:users,email'],
-            'password' => ['required', 'string']
-        ]); */
-
         $user = User::find($id);
         if ($user) {
             $fields = $request->only('name', 'email');
