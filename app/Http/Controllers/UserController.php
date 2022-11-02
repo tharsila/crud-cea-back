@@ -36,21 +36,80 @@ class UserController extends Controller
             'password' => bcrypt($fields['password'])
         ]);
         
-        $token = $user->createToken('JWT')->plainTextToken;
+        if ($user) {
+            $token = $user->createToken('JWT')->plainTextToken;
+    
+            $response = [
+                'user' => $user,
+                'token' => $token,
+                'message' => 'Usuário cadastrado com sucesso!'
+            ];
+            return response()->json($response, 201);
+        }
 
-        $response = [
-            "user" => $user,
-            "token" => $token,
-        ];
-        return response($response, 201);
-        
-        /* $userData = $request->all();
-        return User::create($userData);
+        return response()->json([
+            'message' => 'Erro ao cadastrar o usuário!'
+        ], 404);
 
-        /* $token = $user->createToken('JWT');
-        return response()->json($token->plainTextToken(), 201); */
     }
 
+    /**
+     * Visualiza um usuário especifico
+     *
+     * @param [type] $id
+     * @return User
+     */
+    public function show($id)
+    {
+        $user = User::find($id);
+
+        if ($user) {
+            return $user;
+        }
+
+        return response()->json([
+            'message' => 'Erro ao visualizar o usuário!'
+        ], 404);
+    }
+
+    /**
+     * Atualiza um usuário especifico
+     *
+     * @param Request $request
+     * @param [type] $id
+     * @return void
+     */
+    public function update(Request $request, $id)
+    {
+        $user = User::find($id);
+        if ($user) {
+          return  $user->update($request->all());
+        }
+
+        return response()->json([
+            'message' => 'Erro ao atualizar o usuário!'
+        ], 404);
+    }
+    /**
+     * Remove um usuário especifico
+     *
+     * @param [type] $id
+     * @return void
+     */
+    public function destroy($id)
+    {   
+        $user = User::destroy($id);
+        if($user) {
+            return response()->json([
+                'message' => 'Usuário removido com sucesso!'
+            ], 201);
+        }
+
+        return response()->json([
+            'message' => 'Erro ao remover o usuário!'
+        ], 404);
+    }
+    
     public function login(Request $request) 
     {
         $fields = $request->validate([
@@ -75,41 +134,4 @@ class UserController extends Controller
 
         return response($response);
     }
-
-    /**
-     * Visualiza um usuário especifico
-     *
-     * @param [type] $id
-     * @return User
-     */
-    public function show($id)
-    {
-        return User::findOrFail($id);
-    }
-
-    /**
-     * Atualiza um usuário especifico
-     *
-     * @param Request $request
-     * @param [type] $id
-     * @return void
-     */
-    public function update(Request $request, $id)
-    {
-        $user = User::findOrFail($id);
-        $user->update($request->all());
-
-        return $user;
-    }
-    /**
-     * Remove um usuário especifico
-     *
-     * @param [type] $id
-     * @return void
-     */
-    public function destroy($id)
-    {
-        return User::destroy($id);
-    }
-    
 }

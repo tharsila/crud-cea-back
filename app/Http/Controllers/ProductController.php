@@ -33,9 +33,16 @@ class ProductController extends Controller
             "price" => ['required', 'numeric'],
             "image" => ['required', 'url'],
         ]);
+        
+        $product = Product::create($request->all());
 
-        $productData =  $request->all();
-        return Product::create($productData);
+        if ($product) {
+            return $product;
+        }
+
+        return response()->json([
+            'message' => 'Erro ao cadastrar o produto!'
+        ], 404);
     }
 
     /**
@@ -46,7 +53,15 @@ class ProductController extends Controller
      */
     public function show($id) 
     {
-        return Product::findOrFail($id);
+        $product = Product::find($id);
+
+        if($product) {
+            return $product;
+        }
+
+        return response()->json([
+            'message' => 'Erro ao visualizar o produto!'
+        ], 404);
     }
 
     /**
@@ -59,9 +74,14 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $product = Product::findOrFail($id);
-        $product->update($request->all());
 
-        return $product;
+        if ($product) {
+            return $product->update($request->all());
+        }
+
+        return response()->json([
+            'message' => 'Erro ao atualizar o produto!'
+        ], 404);
     }
 
     /**
@@ -72,6 +92,16 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        return Product::destroy($id);
+        $product = Product::destroy($id);
+
+        if($product) {
+            return response()->json([
+                'message' => 'Produto removido com sucesso!'
+            ], 201);
+        }
+
+        return response()->json([
+            'message' => 'Erro ao remover o produto!'
+        ], 404);
     }
 }
