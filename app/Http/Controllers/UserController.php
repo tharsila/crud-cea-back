@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Http\Resources\UserCollection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -10,7 +11,9 @@ class UserController extends Controller
 {
     public function index()
     {
-        return User::get();
+        $users = User::get();
+
+        return new UserCollection($users);
     }
 
     /**
@@ -22,7 +25,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $fields =  $request->validate([
-            'name' => ['required', 'string'],
+            'name' => ['required', 'string', 'between:3,100'],
             'email' => ['required', 'email', 'unique:users,email'],
             'password' => ['required', 'string']
         ]);

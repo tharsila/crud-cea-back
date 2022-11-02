@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Http\Resources\ProductCollection;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -14,7 +15,9 @@ class ProductController extends Controller
      */
     public function index() 
     {
-        return Product::get();
+        $products = Product::get();
+        
+        return new ProductCollection($products);
     }
 
     /**
@@ -28,7 +31,7 @@ class ProductController extends Controller
         $request->validate([
             "name" => ['required', 'string'],
             "price" => ['required', 'numeric'],
-            "image" => ['required', 'string'],
+            "image" => ['required', 'url'],
         ]);
 
         $productData =  $request->all();
